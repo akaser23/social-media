@@ -11,7 +11,7 @@ const {
 } = require('../../controllers/thought-controller');
 
 router
-    .router('/')
+    .route('/thoughts')
     .get(getAllThought)
     .post(createThought);
 

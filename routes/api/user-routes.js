@@ -11,7 +11,7 @@ const {
 } = require('../../controllers/user-controller');
 
 router
-    .route('/')
+    .route('/users')
     .get(getAllUser)
     .post(createUser);
 
