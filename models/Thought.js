@@ -50,10 +50,10 @@ const ThoughtSchema = new Schema({
     }
 );
 
-//reply count virtual
-ThoughtSchema.virtual('reactionCount').get(function () {
-    return this.reactions.reduce((total, reaction) => total + reaction.replies.length + 1, 0);
-});
+//reaction count virtual
+ThoughtSchema.virtual('reactionCount').get(function() {
+    return this.reaction.length;
+})
 
 const Thought = model('Thought', ThoughtSchema);
 
