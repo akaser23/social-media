@@ -73,26 +73,33 @@ const userController = {
     },
 
     //add a new friend to a users friend list
-    addFriend({ body }, res) {
-        //route?
-        User.create(body)
-            .then(dbUserData => res.json(dbUserData))
-            .catch(err => res.status(400).json(err));
-    },
-
-    //delete a friend from a users friend list
-    deleteFriend({ params }, res) {
-        //route?
-        User.findOneAndDelete({ _id: params.id })
+    addFriend({ params }, res) {
+        // console.log(body);
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $push: { friends: {friendId: params.friendId} } },
+            { new: true }
+        )
             .then(dbUserData => {
                 if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with that id'});
+                    res.status(404).json({ message: 'No user found with this id!' });
                     return;
                 }
                 res.json(dbUserData);
             })
-            .catch(err => res.status(400).json(err));
+            .catch(err => res.json(err));
+    },
+
+    //delete a friend from a users friend list
+    deleteFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: { friendId: params.friendId} } },
+            { new: true }
+        )
+            .then(dbUserdata => res.json(dbUserdata))
+            .catch(err => res.json(err));
     }
-}
+};
 
 module.exports = userController;
