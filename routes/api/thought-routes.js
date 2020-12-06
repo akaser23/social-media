@@ -18,7 +18,6 @@ router
 router
     .route('/:id')
     .get(getThoughtById)
-    .post(createThought)
     .put(updateThought)
     .delete(deleteThought);
 

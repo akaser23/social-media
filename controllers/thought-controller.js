@@ -42,6 +42,7 @@ const thoughtController = {
     // add thought to user
     createThought({ params, body }, res) {
         console.log(body);
+        console.log(params);
         Thought.create(body)
             .then(({ _id }) => {
                 return User.findOneAndUpdate(
@@ -88,14 +89,14 @@ const thoughtController = {
 
     //remove thought by id
     deleteThought({ params }, res) {
-        User.findOneAndDelete({ _id: params.thoughtId })
+        Thought.findOneAndDelete({ _id: params.thoughtId })
             .then(deletedThought => {
                 if (!deletedThought) {
                     return res.status(404).json({ message: 'no thought with this id' });
                 }
                 return User.findOneAndUpdate(
                     { _id: params.userId },
-                    { $pull: { comments: params.commentId } },
+                    { $pull: { thoughts: params.thoughtId } },
                     { new: true }
                 );
             })
