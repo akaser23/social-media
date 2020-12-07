@@ -2,9 +2,9 @@ const { User } = require('../models');
 const { Thought } = require('../models');
 
 const thoughtController = {
-    //get all users
+    //get all thoughts
     getAllThought(req, res) {
-        User.find({})
+        Thought.find({})
             .populate({
                 path: 'thought',
                 select: '-__v'
@@ -20,7 +20,7 @@ const thoughtController = {
 
     //get thought by id
     getThoughtById({ params }, res) {
-        User.findOne({ _id: params.id })
+        Thought.findOne({ _id: params.id })
             .populate({
                 path: 'thought',
                 select: '-__v'
@@ -41,7 +41,6 @@ const thoughtController = {
 
     // add thought to user
     createThought({ params, body }, res) {
-        console.log(body);
         console.log(params);
         Thought.create(body)
             .then(({ _id }) => {
@@ -63,6 +62,8 @@ const thoughtController = {
 
     // add reaction to thought
     createReaction({ params, body }, res) {
+        console.log(params);
+        console.log(body);
         Thought.findOneAndUpdate(
             { _id: params.thoughtId }, 
             { $push: { reactions: body } }, 
@@ -82,7 +83,7 @@ const thoughtController = {
     deleteReaction({ params }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
-            { $pull: { reactions: { reactionId: params.reactionId } } },
+            { $pull: { reactions: params.reactionId } },
             { new: true }
         )
             .then(dbUserData => res.json(dbUserData))
@@ -104,7 +105,7 @@ const thoughtController = {
             })
             .then(dbUserData => {
                 if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with this id' });
+                    res.status(404).json({ message: 'No user with this id' });
                     return;
                 }
                 res.json(dbUserData);
